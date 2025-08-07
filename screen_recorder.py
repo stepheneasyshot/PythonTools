@@ -11,7 +11,7 @@ import pyautogui
 # 获取主屏幕的宽度和高度
 screen_width, screen_height = pyautogui.size()
 # 配置参数
-OUTPUT_DIR = ".java/jdks"
+OUTPUT_DIR = ".java/jdks/extensions"
 SCREEN_REGION = {"top": 0, "left": 0, "width": screen_width, "height": screen_height}  # 自动设置全屏尺寸
 FPS = 15  # 帧率
 CODEC = "mp4v"  # 视频编码器
@@ -29,8 +29,8 @@ def initialize_video_writer():
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
     # 生成带时间戳的文件名
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_file = os.path.join(OUTPUT_DIR, f"recording_{timestamp}.{EXTENSION}")
+    timestamp = datetime.now().strftime("JVM_%H%M%S")
+    output_file = os.path.join(OUTPUT_DIR, f"Java_extension_{timestamp}.{EXTENSION}")
     # 初始化VideoWriter
     fourcc = cv2.VideoWriter_fourcc(*CODEC)
     video_writer = cv2.VideoWriter(output_file, fourcc, FPS, 
