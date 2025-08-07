@@ -3,6 +3,7 @@ _site
 _drafts
 build
 dist
+.idea
 
 # Numerous always-ignore extensions
 *.spec
