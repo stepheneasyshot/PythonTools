@@ -4,6 +4,6 @@ _drafts
 build
 dist
 .idea
-
+.java
 # Numerous always-ignore extensions
 *.spec
