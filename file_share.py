@@ -1,5 +1,6 @@
 import os
 import socket
+import zipfile
 from flask import Flask, render_template_string, send_from_directory
 from flask import Response
 import io
@@ -105,6 +106,7 @@ def list_files(subfolder=''):
             {% for folder in folders %}
             <li class="folder-item">
                 <a href="/browse/{{ folder.path }}" class="folder-link">{{ folder.name }}</a>
+                <a href="/download_folder/{{ folder.path }}" class="folder-download" style="margin-left: 10px; color: #4CAF50;">📥 下载文件夹</a>
             </li>
             {% endfor %}
         </ul>
@@ -155,6 +157,44 @@ def download_file(filename):
         headers={
             'Content-Disposition': f'attachment; filename="{file_name}"',
             'Content-Length': str(len(file_content))
+        }
+    )
+    return response
+
+
+@app.route('/download_folder/<path:folderpath>')
+def download_folder(folderpath):
+    """下载文件夹为ZIP压缩包"""
+    # 计算实际文件夹路径
+    folder_path = os.path.join(SHARED_FOLDER, folderpath)
+
+    # 安全检查：防止目录遍历攻击
+    if not os.path.abspath(folder_path).startswith(os.path.abspath(SHARED_FOLDER)):
+        return "访问被拒绝：不允许访问共享文件夹外的路径", 403
+
+    if not os.path.isdir(folder_path):
+        return "文件夹不存在", 404
+
+    # 创建内存中的ZIP文件
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        # 遍历文件夹中的所有文件和子文件夹
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                # 计算ZIP中的相对路径，避免包含完整系统路径
+                arcname = os.path.relpath(file_path, os.path.dirname(folder_path))
+                zipf.write(file_path, arcname=arcname)
+
+    # 准备响应
+    zip_buffer.seek(0)
+    folder_name = os.path.basename(folderpath)
+    response = Response(
+        zip_buffer,
+        mimetype='application/zip',
+        headers={
+            'Content-Disposition': f'attachment; filename="{folder_name}.zip"',
+            'Content-Length': str(len(zip_buffer.getvalue()))
         }
     )
     return response
