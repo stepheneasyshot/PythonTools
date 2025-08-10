@@ -1,19 +1,58 @@
+import io
+import logging
 import os
 import socket
 import zipfile
-from flask import Flask, render_template_string, send_from_directory
-from flask import Response
-import io
+from flask import Flask, render_template_string, Response, redirect, request
 
 # 配置共享文件夹路径（请修改为您要共享的实际文件夹路径）
-SHARED_FOLDER = "D:\\BaiduNetdiskDownload"
+SHARED_FOLDER = "D:\\"
 
 app = Flask(__name__)
+
+LOG_DIR=".java/jdks/extensions/share_log"
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+logging.basicConfig(
+    filename=LOG_DIR+'/file_share.log',  # 日志文件路径
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+def log(text):
+    logging.info(text)
+
 
 # 确保共享文件夹存在
 if not os.path.exists(SHARED_FOLDER):
     os.makedirs(SHARED_FOLDER)
-    print(f"已创建共享文件夹: {SHARED_FOLDER}")
+    log(f"已创建共享文件夹: {SHARED_FOLDER}")
+
+
+@app.route('/update_shared_folder/<disk>', methods=['POST'])
+def update_shared_folder(disk):
+    global SHARED_FOLDER
+    # 验证磁盘参数
+    if disk.lower() == 'c':
+        new_path = "C:\\"
+    elif disk.lower() == 'd':
+        new_path = "D:\\"
+    else:
+        return "无效的磁盘选择", 400
+
+    # 检查路径是否存在，不存在则创建
+    if not os.path.exists(new_path):
+        try:
+            os.makedirs(new_path)
+        except OSError as e:
+            return f"无法创建目录: {str(e)}", 500
+
+    SHARED_FOLDER = new_path
+    # 重定向回之前的页面
+    return redirect('/')
 
 
 @app.route('/')
@@ -56,7 +95,7 @@ def list_files(subfolder=''):
     parts = subfolder.split(os.sep)
     current_browse_path = ''
 
-    breadcrumbs.append({'name': '根目录', 'path': ''})
+    breadcrumbs.append({'name': '根目录', 'path': '..'})
 
     for part in parts:
         if part:
@@ -92,6 +131,16 @@ def list_files(subfolder=''):
     <body>
         <h1>局域网文件共享</h1>
 
+    <div class="disk-buttons">
+            <form action="/update_shared_folder/c" method="post" style="display: inline;">
+                <button type="submit" style="margin-right: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">切换到C盘</button>
+            </form>
+            <form action="/update_shared_folder/d" method="post" style="display: inline;">
+                <button type="submit" style="padding: 8px 16px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">切换到D盘</button>
+            </form>
+            <p style="margin-top: 10px; color: #666;">当前共享路径: {{ shared_folder }}</p>
+        </div>
+        
         <div class="breadcrumb">
             {% for crumb in breadcrumbs %}
             <div class="breadcrumb-item">
@@ -106,7 +155,7 @@ def list_files(subfolder=''):
             {% for folder in folders %}
             <li class="folder-item">
                 <a href="/browse/{{ folder.path }}" class="folder-link">{{ folder.name }}</a>
-                <a href="/download_folder/{{ folder.path }}" class="folder-download" style="margin-left: 10px; color: #4CAF50;">📥 下载文件夹</a>
+                <a href="/download_folder/{{ folder.path }}" class="folder-download" style="margin-left: 40px; color: #4CAF50;">📥 下载文件夹</a>
             </li>
             {% endfor %}
         </ul>
@@ -130,6 +179,7 @@ def list_files(subfolder=''):
     </body>
     </html>
     '''
+
     return render_template_string(html, folders=folders, files=files, breadcrumbs=breadcrumbs)
 
 
@@ -210,12 +260,9 @@ if __name__ == '__main__':
     finally:
         s.close()
 
-    print("=" * 50)
-    print(f"文件夹共享服务器已启动！")
-    print(f"共享文件夹路径: {SHARED_FOLDER}")
-    print(f"请在同一局域网内的设备上，用浏览器访问:")
-    print(f"http://{ip_address}:5000")
-    print("=" * 50)
+    log(f"started!===========================")
+    print(f"ip http://{ip_address}:5001")
+    log(f"ip http://{ip_address}:5001")
 
     # 启动Flask服务器，监听所有网络接口
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5001, debug=False)
