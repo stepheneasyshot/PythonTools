@@ -1,9 +1,11 @@
 import io
 import logging
 import os
+import re
 import socket
 import zipfile
 from flask import Flask, render_template_string, Response, redirect, request
+from pypinyin import lazy_pinyin, Style
 
 # 配置共享文件夹路径（请修改为您要共享的实际文件夹路径）
 SHARED_FOLDER = "D:\\"
@@ -31,6 +33,24 @@ if not os.path.exists(SHARED_FOLDER):
     os.makedirs(SHARED_FOLDER)
     log(f"已创建共享文件夹: {SHARED_FOLDER}")
 
+
+
+def convert_to_pinyin_if_chinese(text):
+    """
+    如果字符串包含中文，则将其转换为不带声调的拼音，
+    否则返回原字符串。
+    """
+    # 使用正则表达式判断是否包含中文字符
+    chinese_pattern = re.compile(r'[\u4e00-\u9fa5]')
+
+    if chinese_pattern.search(text):
+        # 包含中文，进行拼音转换
+        # 'style=Style.NORMAL' 等同于 lazy_pinyin
+        pinyin_list = lazy_pinyin(text, style=Style.NORMAL)
+        return ' '.join(pinyin_list)
+    else:
+        # 不包含中文，返回原字符串
+        return text
 
 @app.route('/update_shared_folder/<disk>', methods=['POST'])
 def update_shared_folder(disk):
@@ -199,6 +219,8 @@ def download_file(filename):
     # 读取文件内容到内存缓冲区，然后关闭文件
     with open(file_path, 'rb') as f:
         file_content = f.read()
+    # 转换文件名
+    file_name = convert_to_pinyin_if_chinese(file_name)
 
     # 创建响应对象，发送内存中的文件内容
     response = Response(
@@ -238,7 +260,7 @@ def download_folder(folderpath):
 
     # 准备响应
     zip_buffer.seek(0)
-    folder_name = os.path.basename(folderpath)
+    folder_name = convert_to_pinyin_if_chinese(os.path.basename(folderpath))
     response = Response(
         zip_buffer,
         mimetype='application/zip',
