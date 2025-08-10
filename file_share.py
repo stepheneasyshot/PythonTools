@@ -1,6 +1,8 @@
-from flask import Flask, render_template_string, send_from_directory
 import os
 import socket
+from flask import Flask, render_template_string, send_from_directory
+from flask import Response
+import io
 
 # 配置共享文件夹路径（请修改为您要共享的实际文件夹路径）
 SHARED_FOLDER = "D:\\BaiduNetdiskDownload"
@@ -139,15 +141,24 @@ def download_file(filename):
     if not os.path.abspath(file_path).startswith(os.path.abspath(SHARED_FOLDER)) or not os.path.isfile(file_path):
         return "文件不存在或无法访问", 404
 
-    # 获取文件所在目录和文件名
-    directory, file_name = os.path.split(file_path)
+    # 获取文件名
+    file_name = os.path.basename(file_path)
 
-    return send_from_directory(
-        directory,
-        file_name,
-        as_attachment=True,
-        mimetype='application/octet-stream'
+    # 读取文件内容到内存缓冲区，然后关闭文件
+    with open(file_path, 'rb') as f:
+        file_content = f.read()
+
+    # 创建响应对象，发送内存中的文件内容
+    response = Response(
+        io.BytesIO(file_content),
+        mimetype='application/octet-stream',
+        headers={
+            'Content-Disposition': f'attachment; filename="{file_name}"',
+            'Content-Length': str(len(file_content))
+        }
     )
+    return response
+
 
 if __name__ == '__main__':
     # 获取本机局域网IP地址
