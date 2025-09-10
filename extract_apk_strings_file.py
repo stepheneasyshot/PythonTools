@@ -4,7 +4,7 @@ import shutil
 
 # 设置需要搜索的根目录
 # 将 'your_directory_path' 替换为你要搜索的实际目录
-root_directory = '/Users/stephenzhan/Downloads/Car461'
+root_directory = '/Users/stephenzhan/Downloads/systemdata'
 
 # 获取桌面路径
 # 如果你的操作系统不是 macOS 或 Windows，可能需要修改此路径
@@ -58,11 +58,12 @@ def find_and_decompile_apk(directory):
                     print(
                         "Error: apktool command not found. Please ensure apktool is installed and in your system's PATH.")
                 finally:
+                    print("---------------------------------")
                     # 清理：删除解包后的文件夹
-                    print(f"Cleaning up temporary directory: {output_dir}")
-                    if os.path.exists(output_dir):
-                        shutil.rmtree(output_dir)
-                    print("Cleanup complete.")
+                    # print(f"Cleaning up temporary directory: {output_dir}")
+                    # if os.path.exists(output_dir):
+                    #     shutil.rmtree(output_dir)
+                    # print("Cleanup complete.")
 
 
 # 执行脚本
