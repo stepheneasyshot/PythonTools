@@ -7,6 +7,12 @@ import zipfile
 from flask import Flask, render_template_string, Response, redirect, request
 from pypinyin import lazy_pinyin, Style
 
+"""
+
+文件共享工具。将同一局域网内的一台电脑设备，所有文件系统都进行共享，对所有普通用户权限的文件进行复制下载操作
+
+"""
+
 # 配置共享文件夹路径（请修改为您要共享的实际文件夹路径）
 SHARED_FOLDER = "D:\\"
 

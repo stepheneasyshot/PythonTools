@@ -1,5 +1,10 @@
 import logging
 import os
+"""
+
+监听键盘事件，将所有按键记录到日志文件中
+
+"""
 
 from pynput import keyboard
 

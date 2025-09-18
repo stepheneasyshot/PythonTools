@@ -2,6 +2,12 @@ from time import sleep
 
 from PIL import ImageGrab
 
+"""
+
+屏幕截图工具，截取当前屏幕并保存为图片
+
+"""
+
 # 捕获整个屏幕
 print("等待10秒")
 sleep(10)

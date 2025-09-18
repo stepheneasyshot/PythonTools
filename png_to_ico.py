@@ -1,5 +1,11 @@
 from PIL import Image
 
+"""
+
+png 转换为 ico 图标
+
+"""
+
 def png_to_ico(png_path, ico_path):
     # 打开PNG图像
     image = Image.open(png_path)

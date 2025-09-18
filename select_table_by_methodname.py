@@ -4,6 +4,11 @@ from tkinter import filedialog, messagebox, scrolledtext, ttk
 import sys
 import io
 
+"""
+
+查询 Excel 表格中指定方法名的表格
+
+"""
 
 class ExcelQueryApp:
     def __init__(self, root):

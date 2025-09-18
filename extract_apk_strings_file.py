@@ -1,6 +1,12 @@
 import os
 import subprocess
 import shutil
+"""
+
+将翻译后的strings.xml文件移植到原apk资源下，重新打包
+
+"""
+
 
 # 设置需要搜索的根目录
 # 将 'your_directory_path' 替换为你要搜索的实际目录
@@ -60,10 +66,10 @@ def find_and_decompile_apk(directory):
                 finally:
                     print("---------------------------------")
                     # 清理：删除解包后的文件夹
-                    # print(f"Cleaning up temporary directory: {output_dir}")
-                    # if os.path.exists(output_dir):
-                    #     shutil.rmtree(output_dir)
-                    # print("Cleanup complete.")
+                    print(f"Cleaning up temporary directory: {output_dir}")
+                    if os.path.exists(output_dir):
+                        shutil.rmtree(output_dir)
+                    print("Cleanup complete.")
 
 
 # 执行脚本

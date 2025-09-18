@@ -8,6 +8,12 @@ from datetime import datetime
 
 import pyautogui
 
+"""
+
+屏幕录制工具，分段存储为文件
+
+"""
+
 # 获取主屏幕的宽度和高度
 screen_width, screen_height = pyautogui.size()
 # 配置参数

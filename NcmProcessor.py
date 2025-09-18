@@ -7,6 +7,12 @@ import json
 import os
 from Crypto.Cipher import AES
 
+"""
+
+解密 ncm 文件 到 mp3 文件
+
+"""
+
 
 def dump(file_path):
     # 十六进制转字符串

@@ -1,5 +1,13 @@
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
+
+"""
+
+将 MP4 文件转换为 GIF 图片的工具
+
+"""
+
+
 def mp4_to_gif(input_file, output_file, fps=10):
     """
     将 MP4 文件转换为 GIF 图片。

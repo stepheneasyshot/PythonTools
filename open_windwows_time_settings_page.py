@@ -2,7 +2,10 @@ import subprocess
 import os
 from time import sleep
 
+"""
 
+打开 Windows 设置中的“日期和时间”页面的工具
+"""
 def open_date_time_settings():
     """
     自动打开 Windows 设置中的“日期和时间”页面。

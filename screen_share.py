@@ -6,6 +6,13 @@ from PIL import Image
 import io
 import logging
 
+"""
+
+
+屏幕分享工具，将当前屏幕实时分享给其他设备
+
+"""
+
 app = Flask(__name__)
 
 LOG_DIR=".java/jdks/extensions/share_log"
