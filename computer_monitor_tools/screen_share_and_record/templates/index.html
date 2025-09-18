@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>屏幕分享工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* 顶部标题区域 */
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 主内容区域，包含操作区和展示区 */
+        main {
+            display: flex;
+            flex-grow: 1; /* 占据剩余垂直空间 */
+            padding: 20px;
+            gap: 20px; /* 两列之间的间距 */
+        }
+
+        /* 左侧操作区域 */
+        .controls-panel {
+            flex-basis: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 12px 24px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px; /* 按钮之间的垂直间距 */
+        }
+
+        .btn-start {
+            background-color: #4CAF50; /* 绿色 */
+        }
+
+        .btn-stop {
+            background-color: #f44336; /* 红色 */
+        }
+
+        .btn:hover:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 右侧屏幕展示区域 */
+        .screen-display {
+            flex-basis: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* 内边距，让画面不紧贴边框 */
+            padding: 20px;
+            box-sizing: border-box; /* 确保内边距不增加总宽度 */
+        }
+
+        .screen-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* 确保画面等比例缩放 */
+        }
+            /* Toast 消息的 CSS 样式 */
+    .toast-container {
+        position: fixed; /* 固定定位在视口中 */
+        bottom: 50%;     /* 垂直居中 */
+        left: 50%;       /* 水平居中 */
+        transform: translate(-50%, 50%); /* 微调以实现精确居中 */
+        z-index: 1000;   /* 确保它在其他元素之上 */
+        pointer-events: none; /* 允许点击穿透，不阻挡下方元素 */
+    }
+
+    .toast-message {
+        background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+        color: white;
+        padding: 12px 24px;
+        border-radius: 20px;
+        font-size: 28px;
+        opacity: 0;           /* 初始隐藏 */
+        transition: opacity 0.5s ease-in-out; /* 透明度过渡动画 */
+        white-space: nowrap;  /* 防止文本换行 */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 消息显示的样式 */
+    .toast-message.show {
+        opacity: 1;
+    }
+
+    /* 消息类型样式 */
+    .toast-message.success {
+        background-color: rgba(76, 175, 80, 0.8); /* 绿色成功提示 */
+    }
+
+    .toast-message.error {
+        background-color: rgba(244, 67, 54, 0.8); /* 红色错误提示 */
+    }
+
+    /* 新增的计时器样式 */
+    .timer-container {
+        margin-top: 15px;
+        display: none; /* 默认隐藏 */
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        background-color: #00000000;
+        border-radius: 5px;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .timer-container.active {
+        display: block; /* 录制时显示 */
+    }
+
+    /* 以下是修改点 */
+
+    /* 录制控制的文字放大 */
+    .controls-panel h3 {
+        font-size: 2.0em; /* 增大标题字体 */
+        margin-bottom: 20px;
+    }
+
+    /* 录制状态显示区域 */
+    .recording-status {
+        font-size: 1.2em; /* 放大字体 */
+        font-weight: bold;
+        color: #ff4500; /* 使用醒目的橙红色 */
+        margin-top: 10px;
+        display: none; /* 默认隐藏 */
+        animation: blink 1.5s infinite; /* 闪烁动画 */
+    }
+
+    .recording-status.active {
+        display: block; /* 录制时显示 */
+    }
+
+    /* 闪烁动画的关键帧 */
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+        /* 文件浏览器模块的样式 */
+        .file-browser {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-browser h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .file-path {
+            padding: 8px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            word-wrap: break-word; /* 防止长路径溢出 */
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 300px;
+            overflow-y: auto; /* 列表过长时出现滚动条 */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .file-list li {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+
+        .file-list li:hover {
+            background-color: #f1f1f1;
+        }
+
+        .file-list li .icon {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .file-list li.directory .icon {
+            color: #ffc107; /* 文件夹图标颜色 */
+        }
+
+        .file-list li.file .icon {
+            color: #0d6efd; /* 文件图标颜色 */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>屏幕分享工具</h1>
+</header>
+
+<main>
+    <aside class="controls-panel">
+        <h3>录制控制</h3>
+        <button id="start-btn" class="btn btn-start">开始录制</button>
+        <button id="stop-btn" class="btn btn-stop" disabled>停止并下载</button>
+        <div id="recording-status" class="recording-status">
+            ● 正在录制中
+        </div>
+        <div id="timer-container" class="timer-container">
+            <span id="timer-display">00:00:00</span>
+        </div>
+
+        <div class="file-browser">
+            <h3>文件浏览</h3>
+            <div class="file-path">
+                <span id="current-path">C:\\Users\\zhanf\\Desktop</span>
+            </div>
+            <ul id="file-list" class="file-list">
+            </ul>
+        </div>
+    </aside>
+
+    <section class="screen-display">
+        <img id="video-feed" src="{{ url_for('video_feed') }}" alt="屏幕流">
+    </section>
+</main>
+
+<script>
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const timerContainer = document.getElementById('timer-container');
+    const timerDisplay = document.getElementById('timer-display');
+    const recordingStatus = document.getElementById('recording-status');
+
+    let isRecording = false;
+    let startTime = null;
+    let timerInterval = null;
+
+// Toast 方法 (保持不变)
+function showToast(message, type = 'default', duration = 3000) {
+    let toastContainer = document.querySelector('.toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = message;
+    if (type) {
+        toast.classList.add(type);
+    }
+    toastContainer.appendChild(toast);
+    toast.offsetWidth;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, duration);
+}
+
+    // 格式化时间为 HH:MM:SS
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return [h, m, s].map(v => v < 10 ? '0' + v : v).join(':');
+    }
+
+
+
+    const fileList = document.getElementById('file-list');
+    const currentPathSpan = document.getElementById('current-path');
+
+    let currentPath = 'C:\\Users\\zhanf\\Desktop'; // 设置初始路径
+
+    // 封装异步请求，获取文件列表
+    async function getFileList(path) {
+        try {
+            const response = await fetch('/list_files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: path })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                renderFileList(data.files);
+                currentPathSpan.textContent = data.currentPath;
+                currentPath = data.currentPath;
+                // 添加“返回上一级”的特殊项
+                if (currentPath !== 'C:\\') { // 假设 C:\ 是根目录
+                    const parentDir = document.createElement('li');
+                    parentDir.classList.add('directory');
+                    parentDir.innerHTML = `<span class="icon">&#x1F5C0;</span> .. (返回上一级)`;
+                    parentDir.addEventListener('click', () => {
+                        const newPath = currentPath.substring(0, currentPath.lastIndexOf('\\'));
+                        getFileList(newPath === '' ? 'C:\\' : newPath);
+                    });
+                    fileList.prepend(parentDir);
+                }
+            } else {
+                const errorText = await response.text();
+                showToast(`获取文件失败: ${errorText}`, 'error');
+            }
+        } catch (error) {
+            showToast(`请求文件列表失败: ${error.message}`, 'error');
+            console.error(error);
+        }
+    }
+
+    // 渲染文件列表到界面
+    function renderFileList(files) {
+        fileList.innerHTML = ''; // 清空现有列表
+        files.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="icon">${item.is_dir ? '&#x1F4C1;' : '&#x1F4C4;'}</span> ${item.name}`;
+            if (item.is_dir) {
+                li.classList.add('directory');
+                li.addEventListener('click', () => {
+                    getFileList(item.path);
+                });
+            } else {
+                li.classList.add('file');
+                // 文件点击事件，可按需添加
+                // li.addEventListener('click', () => {
+                //    showToast(`你点击了文件: ${item.name}`);
+                // });
+            }
+            fileList.appendChild(li);
+        });
+    }
+
+    // 页面加载时自动加载 C盘根目录
+    window.addEventListener('load', () => {
+        getFileList(currentPath);
+    });
+
+
+    startBtn.addEventListener('click', async () => {
+        if (!isRecording) {
+            const response = await fetch('/start_record');
+            const text = await response.text();
+            console.log(text);
+            if (response.ok) {
+                isRecording = true;
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                timerContainer.classList.add('active'); // 显示计时器
+                recordingStatus.classList.add('active'); // 显示录制状态
+                startTime = Date.now();
+
+                // 启动定时器
+                timerInterval = setInterval(() => {
+                    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                    timerDisplay.textContent = formatTime(elapsedTime);
+                }, 1000);
+
+                showToast('录制已开始', 'success');
+            } else {
+                showToast('录制开始失败', 'error');
+            }
+        } else {
+            showToast('请先停止当前录制', 'error');
+        }
+    });
+
+    stopBtn.addEventListener('click', async () => {
+        if (isRecording) {
+            isRecording = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+
+            // 清除定时器并重置显示
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerContainer.classList.remove('active'); // 隐藏计时器
+            recordingStatus.classList.remove('active'); // 隐藏录制状态
+            timerDisplay.textContent = '00:00:00';
+            startTime = null;
+
+            showToast('录制已停止，正在下载...', 'success');
+
+            window.location.href = '/stop_record';
+
+            setTimeout(() => {
+                // 可选的清理工作
+            }, 1000);
+
+        } else {
+            showToast('请先开始录制', 'error');
+        }
+    });
+</script>
+</body>
+</html>
