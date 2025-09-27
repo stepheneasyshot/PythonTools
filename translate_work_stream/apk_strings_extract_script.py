@@ -1,16 +1,14 @@
 import os
 import subprocess
 import shutil
-"""
-
-将翻译后的strings.xml文件移植到原apk资源下，重新打包
 
 """
-
+将目录下的所有apk文件解包，将翻译后的strings.xml文件复制到一处，供手动分段翻译使用
+"""
 
 # 设置需要搜索的根目录
 # 将 'your_directory_path' 替换为你要搜索的实际目录
-root_directory = '/Users/stephenzhan/Downloads/systemdata'
+root_directory = '/Users/stephenzhan/Downloads/Car471/signed'
 
 # 获取桌面路径
 # 如果你的操作系统不是 macOS 或 Windows，可能需要修改此路径

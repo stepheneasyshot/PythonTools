@@ -3,10 +3,9 @@ import shutil
 import subprocess
 
 """
-
-将目录下的所有apk文件解包，将翻译后的strings.xml文件复制到一处，供手动分段翻译使用
-
+将翻译后的strings.xml文件移植到原apk资源下，重新打包
 """
+
 # --- 配置参数 ---
 # 待处理的APK文件所在的根目录
 ROOT_DIR = '/Users/stephenzhan/Downloads/systemdata'
