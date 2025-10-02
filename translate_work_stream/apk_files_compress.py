@@ -10,7 +10,7 @@ import subprocess
 # 待处理的APK文件所在的根目录
 ROOT_DIR = '/Users/stephenzhan/Downloads/systemdata'
 # 包含strings.xml文件的目录
-STRINGS_XML_DIR = '/Users/stephenzhan/Downloads/Arabic_version'
+STRINGS_XML_DIR = '/Users/stephenzhan/Desktop/LAO'
 # 打包后APK文件的输出目录
 DESKTOP_DIR = os.path.join(os.path.expanduser("~"), "Desktop")
 
@@ -63,24 +63,24 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
                     print(f"复制文件失败: {e}")
                     continue
 
-                # 4. 使用apktool打包
+                # 4. 使用apktool打包，apk留在原来的文件夹中
                 try:
-                    subprocess.run(["apktool", "b", output_dir, "-o", f"{output_dir}_rebuilt.apk"], check=True)
-                    print(f"成功重新打包APK: {output_dir}_rebuilt.apk")
+                    subprocess.run(["apktool", "b", output_dir, "-o", f"{output_dir}.apk"], check=True)
+                    print(f"成功重新打包APK: {output_dir}.apk")
                 except subprocess.CalledProcessError as e:
                     print(f"打包失败: {e}")
                     continue
 
-                # 5. 将打包后的APK复制到桌面
-                rebuilt_apk_path = f"{output_dir}_rebuilt.apk"
-                final_apk_path = os.path.join(desktop_dir, f"{apk_name}_rebuilt.apk")
-
-                try:
-                    shutil.move(rebuilt_apk_path, final_apk_path)
-                    print(f"已将打包后的APK复制到桌面: {final_apk_path}")
-                except shutil.Error as e:
-                    print(f"复制到桌面失败: {e}")
-                    continue
+                # # 5. 将打包后的APK复制到桌面
+                # rebuilt_apk_path = f"{output_dir}_rebuilt.apk"
+                # final_apk_path = os.path.join(desktop_dir, f"{apk_name}_rebuilt.apk")
+                #
+                # try:
+                #     shutil.move(rebuilt_apk_path, final_apk_path)
+                #     print(f"已将打包后的APK复制到桌面: {final_apk_path}")
+                # except shutil.Error as e:
+                #     print(f"复制到桌面失败: {e}")
+                #     continue
 
                 # 清理临时解包目录
                 try:

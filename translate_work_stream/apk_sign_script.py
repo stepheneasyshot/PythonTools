@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # ==========================
     # 请在这里修改你的配置信息
     # ==========================
-    APK_DIRECTORY = '/Users/stephenzhan/Downloads/systemdata'
+    APK_DIRECTORY = '/Users/stephenzhan/Desktop'
     KEYSTORE_PATH = 'android_sign_keys/stephen-release-key.keystore'
     KEY_ALIAS = "stephen"
     KEY_PASSWORD = "stephen"
