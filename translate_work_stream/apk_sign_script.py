@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 
+# 失败列表
+failed_files = []
 
 def sign_apk_in_directory(directory, keystore_path, key_alias, key_pass):
     """
@@ -61,14 +63,21 @@ def sign_apk_in_directory(directory, keystore_path, key_alias, key_pass):
                         signed_count += 1
                     else:
                         print(f"签名失败，错误信息: {result.stderr}")
+                        failed_files.append(apk_path)
 
                 except subprocess.CalledProcessError as e:
                     print(f"签名命令执行失败，错误: {e.stderr}")
+                    failed_files.append(apk_path)
                 except Exception as e:
                     print(f"处理文件 {apk_path} 时发生未知错误: {e}")
+                    failed_files.append(apk_path)
 
     print(f"\n批量签名完成。共计签名 {signed_count} 个APK文件。")
-
+    # 打印失败列表
+    if failed_files:
+        print("\n以下文件签名失败:")
+        for failed_file in failed_files:
+            print(failed_file)
 
 if __name__ == '__main__':
     # ==========================

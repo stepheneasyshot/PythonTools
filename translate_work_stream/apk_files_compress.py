@@ -8,12 +8,14 @@ import subprocess
 
 # --- 配置参数 ---
 # 待处理的APK文件所在的根目录
-ROOT_DIR = '/Users/stephenzhan/Downloads/systemdata'
+ROOT_DIR = '/Users/stephenzhan/Desktop/Car461_ZH/signed'
 # 包含strings.xml文件的目录
-STRINGS_XML_DIR = '/Users/stephenzhan/Desktop/LAO'
+STRINGS_XML_DIR = '/Users/stephenzhan/Desktop/LAO_test'
 # 打包后APK文件的输出目录
 DESKTOP_DIR = os.path.join(os.path.expanduser("~"), "Desktop")
 
+# 失败列表
+failed_files = []
 
 def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
     """
@@ -22,6 +24,8 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
             if filename.endswith(".apk"):
+                print("=" * 50)
+
                 apk_path = os.path.join(dirpath, filename)
                 apk_name = os.path.splitext(filename)[0]
 
@@ -34,6 +38,7 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
                     print(f"成功解包到: {output_dir}")
                 except subprocess.CalledProcessError as e:
                     print(f"解包失败: {e}")
+                    failed_files.append(apk_path)
                     continue
 
                 # 2. 删除原始APK文件
@@ -51,6 +56,7 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
 
                 if not os.path.exists(source_strings_xml):
                     print(f"未找到对应的XML文件: {source_strings_xml}")
+                    failed_files.append(apk_path)
                     continue
 
                 # 确保目标目录存在
@@ -61,6 +67,7 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
                     print(f"成功复制并重命名strings文件: {target_strings_xml}")
                 except shutil.Error as e:
                     print(f"复制文件失败: {e}")
+                    failed_files.append(apk_path)
                     continue
 
                 # 4. 使用apktool打包，apk留在原来的文件夹中
@@ -69,6 +76,7 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
                     print(f"成功重新打包APK: {output_dir}.apk")
                 except subprocess.CalledProcessError as e:
                     print(f"打包失败: {e}")
+                    failed_files.append(apk_path)
                     continue
 
                 # # 5. 将打包后的APK复制到桌面
@@ -88,10 +96,12 @@ def find_and_process_apks(root_dir, strings_xml_dir, desktop_dir):
                     print(f"已清理临时目录: {output_dir}")
                 except OSError as e:
                     print(f"清理临时目录失败: {e}")
-
-                print("-" * 30)
-
+                    failed_files.append(apk_path)
 
 if __name__ == "__main__":
     find_and_process_apks(ROOT_DIR, STRINGS_XML_DIR, DESKTOP_DIR)
     print("所有APK文件处理完毕。")
+    if failed_files:
+        print("以下APK文件处理失败:")
+        for f in failed_files:
+            print(f)
