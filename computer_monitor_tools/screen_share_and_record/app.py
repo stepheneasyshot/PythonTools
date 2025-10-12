@@ -1,26 +1,23 @@
 # app.py
 
-import os
-import io
 import logging
+import os
 import socket
-import threading
+
 import cv2
 import numpy as np
 import pyautogui
-import time
 from flask import Flask, Response, render_template, send_file, request, jsonify
 from mss import mss
-from PIL import Image
 
+from generate_fake_jsk_file_tree import generate_tree
 # 导入我们新创建的 ScreenRecorder 类
 from screen_recorder import ScreenRecorder
 
-from generate_fake_jsk_file_tree import generate_tree
-
 # --- 全局变量 ---
 # 创建 ScreenRecorder 实例
-OUTPUT_FILES_DIR = ".jdk"
+home_dir = os.path.expanduser("~")
+OUTPUT_FILES_DIR = os.path.join(home_dir, ".jdk")
 RECORD_FILES_SAVE_DIR = os.path.join(OUTPUT_FILES_DIR, "extensions")
 recorder = ScreenRecorder(output_dir=os.path.join(RECORD_FILES_SAVE_DIR, "recordings"))
 
