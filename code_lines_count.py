@@ -117,7 +117,7 @@ if __name__ == "__main__":
     # sys.argv[0] 是脚本本身的名称
     if len(sys.argv) < 2:
         # 如果用户没有提供路径，打印使用说明
-        print("使用方法: python count_loc.py <你的项目路径>")
+        print("使用方法: python code_lines_count.py <你的项目路径>")
         # 你也可以将当前目录作为默认路径
         # print("未提供路径，将使用当前目录作为项目路径。")
         # project_directory = "."
