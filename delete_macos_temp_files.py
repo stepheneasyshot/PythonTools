@@ -5,7 +5,7 @@ from datetime import datetime
 
 """
 
-删除目录中以 ._ 开头的文件
+删除目录中以 ._ 开头的，和 ".DS_Store"文件
 
 """
 
@@ -29,11 +29,17 @@ def delete_macos_temp_files(directory):
                 print(f'deleted file: {item_path}')
             except Exception as e:
                 print(f'delete file {item_path} failed: {str(e)}')
+        elif item == '.DS_Store':
+            try:
+                os.remove(item_path)
+                print(f'deleted file: {item_path}')
+            except Exception as e:
+                print(f'delete file {item_path} failed: {str(e)}')
         elif os.path.isdir(item_path):
             delete_macos_temp_files(item_path)
 
 if __name__ == '__main__':
     # 要删除的目录
-    directory_to_clean = 'C:\\Users\\zhanf\\Desktop\\Car461_TH'
+    directory_to_clean = 'E:\\ExpoTranslate\\ICAR03T\\LAO\\Car461_LAO_202510241509_codestringmodify'
     # 调用函数删除文件
     delete_macos_temp_files(directory_to_clean)
