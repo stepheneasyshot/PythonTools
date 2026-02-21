@@ -7,3 +7,5 @@ dist
 .java
 # Numerous always-ignore extensions
 *.spec
+
+/venv
