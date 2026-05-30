@@ -9,3 +9,7 @@ dist
 *.spec
 
 /venv
+
+/VoxCpm/pretrained_models
+
+*.DS_STORE
