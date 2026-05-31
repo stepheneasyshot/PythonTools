@@ -13,3 +13,4 @@ dist
 /VoxCpm/pretrained_models
 
 *.DS_STORE
+VoxCpm/__pycache__/Voxcpm_test.cpython-310.pyc
