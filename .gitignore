@@ -1,16 +1,67 @@
-# Ignore docs files
-_site
-_drafts
-build
-dist
-.idea
-.java
-# Numerous always-ignore extensions
-*.spec
+# ============================
+# Python
+# ============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+build/
+dist/
+*.whl
 
-/venv
+# ============================
+# Virtual Environment
+# ============================
+venv/
+.venv/
+env/
 
-/VoxCpm/pretrained_models
+# ============================
+# macOS
+# ============================
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
 
-*.DS_STORE
-VoxCpm/__pycache__/Voxcpm_test.cpython-310.pyc
+# ============================
+# IDE / Editor
+# ============================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+
+# ============================
+# Streamlit
+# ============================
+.streamlit/secrets.toml
+
+# ============================
+# 项目特定：模型权重
+# ============================
+VoxCpm/pretrained_models/
+
+# ============================
+# 项目特定：运行时生成的文件
+# ============================
+*.log
+full_screen_capture.png
+screenshot.png
+generated_video.mp4
+dialogue_example.mp4
+converted_positive.jpg
+
+# ============================
+# 临时 / 归档
+# ============================
+temp/
+tmp/

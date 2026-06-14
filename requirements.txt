@@ -1,3 +1,24 @@
-streamlit
-opencv-python-headless
-numpy
+# PythonTools - Dependencies
+# Install: pip install -r requirements.txt
+
+# --- Image Processing ---
+streamlit            # negative_to_positive web UI
+opencv-python-headless  # negative_to_positive image processing
+numpy                # image processing
+Pillow               # JPG/PNG/ICO conversion, screenshot
+moviepy              # MP4 to GIF conversion
+
+# --- AI / LLM ---
+transformers         # local_llm_chat (HuggingFace models)
+torch                # local_llm_chat model runtime
+openai               # deepseek_chat API client
+google-genai         # gemini_video_gen API client
+
+# --- File Utilities ---
+pypandoc             # Markdown to PDF conversion
+pycryptodome         # NCM decryption (Crypto.Cipher.AES)
+soundfile            # VoxCpm TTS audio output
+
+# --- VoxCpm TTS ---
+modelscope           # Model download
+voxcpm               # Voice cloning TTS
