@@ -4,7 +4,6 @@ Supports single file or batch conversion of all JPG files in a directory.
 """
 
 import os
-from pathlib import Path
 from PIL import Image
 
 
@@ -48,10 +47,20 @@ def convert_jpg_to_png(source_path, target_folder=None):
 
 
 if __name__ == "__main__":
-    # Example: convert a single file
-    # convert_jpg_to_png("example.jpg")
+    import tkinter as tk
+    from tkinter import filedialog
 
-    # Example: batch convert all JPGs in a directory
-    input_dir = Path("~/Downloads/app_icon.jpg").expanduser()
-    output_dir = "./converted_pngs"
-    convert_jpg_to_png(input_dir, output_dir)
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes("-topmost", True)
+
+    files = filedialog.askopenfilenames(
+        title="选择要转换的 JPG 图片",
+        filetypes=[("JPEG 图片", "*.jpg *.jpeg"), ("所有文件", "*.*")],
+    )
+
+    if not files:
+        print("未选择任何文件。")
+    else:
+        for picked in files:
+            convert_jpg_to_png(picked)

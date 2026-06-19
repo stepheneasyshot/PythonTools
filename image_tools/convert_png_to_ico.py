@@ -27,5 +27,21 @@ def convert_png_to_ico(png_path, ico_path):
 
 
 if __name__ == "__main__":
-    # Example usage
-    convert_png_to_ico("logo.png", "logo.ico")
+    import os
+    import tkinter as tk
+    from tkinter import filedialog
+
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes("-topmost", True)
+
+    src = filedialog.askopenfilename(
+        title="选择一个 PNG 图片",
+        filetypes=[("PNG 图片", "*.png"), ("所有文件", "*.*")],
+    )
+
+    if not src:
+        print("未选择任何文件。")
+    else:
+        out = os.path.splitext(src)[0] + ".ico"
+        convert_png_to_ico(src, out)

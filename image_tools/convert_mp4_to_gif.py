@@ -29,5 +29,21 @@ def convert_mp4_to_gif(input_file, output_file, fps=10):
 
 
 if __name__ == "__main__":
-    # Example usage
-    convert_mp4_to_gif("input.mp4", "output.gif", fps=10)
+    import os
+    import tkinter as tk
+    from tkinter import filedialog
+
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes("-topmost", True)
+
+    src = filedialog.askopenfilename(
+        title="选择一个 MP4 视频",
+        filetypes=[("MP4 视频", "*.mp4"), ("所有文件", "*.*")],
+    )
+
+    if not src:
+        print("未选择任何文件。")
+    else:
+        out = os.path.splitext(src)[0] + ".gif"
+        convert_mp4_to_gif(src, out, fps=10)
