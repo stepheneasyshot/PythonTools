@@ -1,3 +1,4 @@
+# streamlit run
 from pathlib import Path
 
 import soundfile as sf
