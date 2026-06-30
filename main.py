@@ -40,66 +40,72 @@ TOOLS = {
         "interactive": False,
     },
     "6": {
+        "name": "Image: Compress PNG (TinyPNG-style)",
+        "module": "image_tools.png_compressor",
+        "func": "compress_png",
+        "interactive": False,
+    },
+    "7": {
         "name": "AI: Local LLM Chat",
         "module": "ai_tools.local_llm_chat",
         "func": "chat_loop",
         "interactive": True,
     },
-    "7": {
+    "8": {
         "name": "AI: DeepSeek Chat",
         "module": "ai_tools.deepseek_chat",
         "func": "deepseek_chat",
         "interactive": False,
     },
-    "8": {
+    "9": {
         "name": "AI: Gemini Video Generation",
         "module": "ai_tools.gemini_video_gen",
         "func": "generate_video",
         "interactive": False,
     },
-    "9": {
+    "10": {
         "name": "File: Base64 Encode Variables",
         "module": "file_tools.base64_encoder",
         "func": "encode_file_variables",
         "interactive": False,
     },
-    "10": {
+    "11": {
         "name": "File: Batch Rename Files",
         "module": "file_tools.batch_rename",
         "func": "rename_files",
         "interactive": False,
     },
-    "11": {
+    "12": {
         "name": "File: Markdown to PDF",
         "module": "file_tools.convert_md_to_pdf",
         "func": "markdown_to_pdf",
         "interactive": False,
     },
-    "12": {
+    "13": {
         "name": "File: Clean macOS Temp Files",
         "module": "file_tools.macos_cleaner",
         "func": "clean_macos_temp_files",
         "interactive": False,
     },
-    "13": {
+    "14": {
         "name": "System: SCR File Cleaner (Daemon)",
         "module": "system_tools.scr_cleaner",
         "func": "start_monitoring",
         "interactive": True,
     },
-    "14": {
+    "15": {
         "name": "System: Open Windows Time Settings",
         "module": "system_tools.open_time_settings",
         "func": "open_date_time_settings",
         "interactive": False,
     },
-    "15": {
+    "16": {
         "name": "Code: Project Line Counter",
         "module": "code_tools.line_counter",
         "func": "analyze_project",
         "interactive": False,
     },
-    "16": {
+    "17": {
         "name": "Music: Decrypt NCM Files",
         "module": "music_tools.ncm_decrypt",
         "func": "decrypt_ncm",
@@ -152,7 +158,7 @@ def main():
     """Main entry point: show menu and dispatch tool selection."""
     while True:
         print_menu()
-        choice = input("\nSelect a tool [1-16, q]: ").strip().lower()
+        choice = input("\nSelect a tool [1-17, q]: ").strip().lower()
 
         if choice == "q":
             print("Goodbye!")

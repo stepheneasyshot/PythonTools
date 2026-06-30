@@ -37,6 +37,7 @@ PythonTools/
 │   ├── convert_jpg_to_png.py    # JPG → PNG 转换
 │   ├── convert_png_to_ico.py    # PNG → ICO 转换
 │   ├── convert_mp4_to_gif.py    # MP4 → GIF 转换
+│   ├── png_compressor.py        # PNG 压缩（TinyPNG 风格量化）
 │   ├── negative_to_positive.py  # 胶片负片转正片（Streamlit Web UI）
 │   └── screenshot.py            # 屏幕截图
 │
@@ -76,6 +77,7 @@ PythonTools/
 | `convert_jpg_to_png` | `convert_jpg_to_png(source_path, target_folder=None)` | 单文件或目录批量 JPG→PNG |
 | `convert_png_to_ico` | `convert_png_to_ico(png_path, ico_path)` | PNG 转 ICO 图标 |
 | `convert_mp4_to_gif` | `convert_mp4_to_gif(input_file, output_file, fps=10)` | MP4 视频转 GIF 动图 |
+| `png_compressor` | `compress_png(source_path, target_path=None, colors=256)` | PNG 颜色量化压缩（类 TinyPNG） |
 | `negative_to_positive` | `run_app()` | Streamlit Web UI，负片扫描转正片 |
 | `screenshot` | `capture_screen(output_path, delay=0)` | 截屏并保存为 PNG |
 
@@ -83,6 +85,12 @@ PythonTools/
 # 示例：批量转换 JPG
 from image_tools import convert_jpg_to_png
 convert_jpg_to_png("./photos", "./output")
+
+# 示例：PNG 压缩（减少 50-80% 体积）
+from image_tools import compress_png
+compress_png("photo.png")                        # 输出 photo_compressed.png
+compress_png("photo.png", "compressed/out.png")  # 指定输出
+compress_png("./images/", "./compressed/")       # 批量压缩目录
 
 # 示例：胶片负片转换
 from image_tools import run_app

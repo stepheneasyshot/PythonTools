@@ -1,9 +1,10 @@
-"""Image processing tools: format conversion, negative-to-positive, screenshot."""
+"""Image processing tools: format conversion, compression, negative-to-positive, screenshot."""
 
 __all__ = [
     "convert_jpg_to_png",
     "convert_png_to_ico",
     "convert_mp4_to_gif",
+    "compress_png",
     "process_image",
     "run_app",
     "capture_screen",
@@ -20,6 +21,9 @@ def __getattr__(name):
     if name == "convert_mp4_to_gif":
         from .convert_mp4_to_gif import convert_mp4_to_gif
         return convert_mp4_to_gif
+    if name == "compress_png":
+        from .png_compressor import compress_png
+        return compress_png
     if name == "process_image":
         from .negative_to_positive import process_image
         return process_image
