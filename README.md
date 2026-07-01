@@ -22,7 +22,7 @@ source venv/bin/activate        # Linux/macOS
 # venv\Scripts\activate         # Windows
 pip install -r requirements.txt
 
-# 启动交互式菜单
+# 启动图形界面
 python main.py
 ```
 
@@ -30,7 +30,7 @@ python main.py
 
 ```
 PythonTools/
-├── main.py                  # 统一启动入口（交互式菜单）
+├── main.py                  # 统一启动入口（tkinter 图形界面）
 ├── requirements.txt         # 依赖列表
 │
 ├── image_tools/             # 图片 / 视频处理
